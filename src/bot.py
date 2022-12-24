@@ -7,7 +7,7 @@ bot = telebot.TeleBot(TOKEN)
 @bot.message_handler(func=lambda mensagem : verificar_expressao(mensagem.text))
 def responder_expressao(mensagem):
     
-    resposta = calcular(mensagem.text)
+    resposta = str(calcular(mensagem.text))
 
     bot.reply_to(mensagem, resposta)
 

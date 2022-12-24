@@ -1,3 +1,2 @@
 src/my_token.py
-src/__pycache__/
-*.pyc
+src/__pycache__/*.pyc

@@ -52,7 +52,7 @@ def verificar_expressao(expressao_bruta : str) -> bool:
         return False
 
 
-def calcular(expressao_bruta : str) -> str:
+def calcular(expressao_bruta : str) -> int or float:
     """
     Função que sintetiza a ação de calcular do Bot
 
@@ -60,7 +60,7 @@ def calcular(expressao_bruta : str) -> str:
         expressao_bruta (str): Entrada do usuário
 
     Returns:
-        str: Resposta do calculo
+        int or float: Resposta do calculo
     """
 
     expressao = refinar_expressao(expressao_bruta).split()
@@ -69,7 +69,15 @@ def calcular(expressao_bruta : str) -> str:
         while operador in expressao:
             expressao = operacao(expressao, operador)
 
-    return expressao[0]
+    resultado = expressao[0]
+
+    inteiro = int(resultado)
+    decimal = float(resultado)
+
+    if inteiro == decimal:
+        return inteiro
+    else:
+        return decimal
 
 
 def operacao(expressao : list, operador : str) -> list:
