@@ -4,14 +4,48 @@ import telebot
 
 bot = telebot.TeleBot(TOKEN)
 
-@bot.message_handler(func=lambda mensagem : verificar_expressao(mensagem.text))
+bot.calculadora_ativada = False
+
+def qualquer_mensagem(mensagem):
+    return True
+
+@bot.message_handler(commands=['ativar'])
+def ativar_calculadora(mensagem):
+
+    if bot.calculadora_ativada:
+        bot.reply_to(mensagem, 'Calculadora já ativada')
+    else:
+        bot.calculadora_ativada = True
+        bot.reply_to(mensagem, 'Ativando calculadora...')
+
+@bot.message_handler(commands=['desativar'])
+def desativar_calculadora(mensagem):
+
+    if not bot.calculadora_ativada:
+        bot.reply_to(mensagem, 'Calculadora já desativada')
+    else:
+        bot.calculadora_ativada = False
+        bot.reply_to(mensagem, 'Desativando calculadora...')
+
+@bot.message_handler(func=lambda mensagem : qualquer_mensagem(mensagem.text) and not bot.calculadora_ativada)
+def instruir_usuario(mensagem):
+
+    texto = """
+    Mensagem não identificada, verificar a tabela de comandos.
+    /ativar - Para ativar a calculadora.
+    /desativar - Para desativar a calculadora.
+    """
+
+    bot.reply_to(mensagem, texto)
+
+@bot.message_handler(func=lambda mensagem : verificar_expressao(mensagem.text) and bot.calculadora_ativada)
 def responder_expressao(mensagem):
     
     resposta = str(calcular(mensagem.text))
 
     bot.reply_to(mensagem, resposta)
 
-@bot.message_handler(func=lambda mensagem : not verificar_expressao(mensagem.text))
+@bot.message_handler(func=lambda mensagem : not verificar_expressao(mensagem.text) and bot.calculadora_ativada)
 def responder_erro(mensagem):
     
     bot.reply_to(mensagem, 'ERRO! Verifique a expressão!')
